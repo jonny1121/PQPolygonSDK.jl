@@ -1,7 +1,7 @@
 name = "PQPolygonSDK"
 uuid = "a9381516-e38f-4c81-935c-32707fb4df4c"
 authors = ["Varnerlab <jvarner@pooksoft.com>"]
-version = "0.1.4"
+version = "0.1.5"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
