@@ -1,4 +1,4 @@
-using testPQPolygonSDK #test package -ycpan
+using PQPolygonSDK #test package -ycpan
 using Dates
 using DataFrames
 

@@ -1,4 +1,4 @@
-using testPQPolygonSDK
+using PQPolygonSDK
 using Dates
 using DataFrames
 
