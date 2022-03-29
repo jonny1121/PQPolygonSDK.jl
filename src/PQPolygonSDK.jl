@@ -23,5 +23,16 @@ export PolygonDailyOpenCloseEndpointModel
 export PolygonTickerNewsEndpointModel
 export PolygonTickerDetailsEndpointModel
 
+# endpoint models from ycpan1012 
+export PolygonMarketHolidaysEndpointModel
+export PolygonExchangesEndpointModel
+export PolygonStockSplitsEndpointModel
+export PolygonMarketStatusEndpointModel
+export PolygonDividendsEndpointModel
+export PolygonTickersEndpointModel
+export PolygonConditionsEndpointModel
+export PolygonStockFinancialsEndpointModel
+export PolygonTickerTypesEndpointModel 
+
 
 end # module

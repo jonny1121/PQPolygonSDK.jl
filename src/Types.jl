@@ -101,3 +101,138 @@ mutable struct PolygonOptionsContractReferenceEndpoint <: AbstractPolygonEndpoin
     # constructor -
     PolygonOptionsContractReferenceEndpoint() = new()
 end
+
+# endpoints from ycpan1012
+mutable struct PolygonMarketHolidaysEndpointModel <: AbstractPolygonEndpointModel #ycpan
+
+    # data -
+    apikey::String    
+
+    # constructor -
+    PolygonMarketHolidaysEndpointModel() = new()
+end
+
+mutable struct PolygonExchangesEndpointModel <: AbstractPolygonEndpointModel #ycpan
+
+    # data -
+    apikey::String
+    asset_class::String
+    locale::String
+    
+    # constructor -
+    PolygonExchangesEndpointModel() = new()
+end
+
+mutable struct PolygonStockSplitsEndpointModel <: AbstractPolygonEndpointModel #ycpan
+
+    # data -
+    apikey::String
+    ticker::String
+    execution_date::String
+    reverse_split::String
+    order::String
+    limit::String
+    sort::String
+    
+    # constructor -
+    PolygonStockSplitsEndpointModel() = new()
+end
+
+mutable struct PolygonMarketStatusEndpointModel <: AbstractPolygonEndpointModel #ycpan
+
+    # data - 
+    apikey::String    
+
+    # constructor -
+    PolygonMarketStatusEndpointModel() = new()
+end
+
+mutable struct PolygonDividendsEndpointModel <: AbstractPolygonEndpointModel #ycpan
+
+    # data -
+    apikey::String
+    ticker::String
+    ex_dividend_date::String
+    record_date::String
+    declaration_date::String
+    pay_date::String
+    frequency::String
+    cash_amount::String
+    dividend_type::String
+    order::String
+    limit::String
+    sort::String
+    
+    # constructor -
+    PolygonDividendsEndpointModel() = new()
+end
+
+mutable struct PolygonTickersEndpointModel <: AbstractPolygonEndpointModel #ycpan
+
+    # data -
+    apikey::String
+    ticker::String
+    type::String
+    market::String
+    exchange::String
+    cusip::String
+    cik::String
+    date::String
+    search::String
+    active::Bool
+    sort::String
+    order::String
+    limit::String
+        
+    
+    # constructor -
+    PolygonTickersEndpointModel() = new()
+end
+
+mutable struct PolygonConditionsEndpointModel <: AbstractPolygonEndpointModel #ycpan
+
+    # data -
+    apikey::String
+    asset_class::String
+    data_type::String
+    id::String
+    sip::String
+    order::String
+    limit::String
+    sort::String
+        
+    
+    # constructor -
+    PolygonConditionsEndpointModel() = new()
+end
+
+mutable struct PolygonStockFinancialsEndpointModel <: AbstractPolygonEndpointModel #ycpan
+
+    # data -
+    apikey::String
+    ticker::String
+    cik::String
+    company_name::String
+    sic::String
+    filing_date::String
+    period_of_report_date::String
+    timeframe::String
+    include_sources::String
+    order::String
+    limit::String
+    sort::String
+    
+    # constructor -
+    PolygonStockFinancialsEndpointModel() = new()
+end
+
+mutable struct PolygonTickerTypesEndpointModel <: AbstractPolygonEndpointModel #ycpan
+
+    # data -
+    apikey::String
+    asset_class::String
+    locale::String
+
+    # constructor -
+    PolygonTickerTypesEndpointModel() = new()
+end

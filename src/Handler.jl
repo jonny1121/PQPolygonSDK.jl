@@ -299,13 +299,437 @@ function _process_ticker_news_call_response(body::String)
     return (header_dictionary, df)
 end
 
-function _process_ticker_details_call_response(body::String)
+# handlers developed by ycpan1012 -
+function _process_ticker_details_call_response(body::String) #ycpan
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+
+    # before we do anything - check: do we have an error? can be due to stick or date
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "NOT_FOUND" || status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+    
+    # initialize -
+    header_dictionary = Dict{String,Any}()
+    df = DataFrame(
+
+            ticker = String[],
+            name = String[],
+            market = String[],
+            locale = String[],
+            primary_exchange = String[],
+            type = String[],
+            active = Bool[],
+            currency_name = String[],
+            cik = String[],
+            composite_figi = String[],
+            share_class_figi = String[],
+            market_cap = Float64[],
+            phone_number = String[],
+            address1 = String[],
+            city = String[],
+            state = String[],
+            postal_code = String[],
+            description = String[],
+            sic_code = String[],
+            sic_description = String[],
+            ticker_root = String[],
+            homepage_url = String[],
+            total_employees = Float64[],
+            list_date = String[],
+            logo_url = String[],
+            icon_url = String[],
+            share_class_shares_outstanding = Float64[],
+            weighted_shares_outstanding = Float64[],
+            delisted_utc = String[]
+    );
+    
+    # fill in the header dictionary -
+    header_keys = [
+        "status", "request_id"
+    ];
+
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # if no results we return nothing
+    if (request_body_dictionary["results"] == Any[]) # we have no results ...
+        
+        # return the header and nothing -
+        return (header_dictionary, nothing)
+    end
+
+    results_array = request_body_dictionary["results"]
+
+    # get if no values
+    get!(results_array, "primary_exchange", "N/A")
+    get!(results_array, "type", "N/A")
+    get!(results_array, "cik", "N/A")
+    get!(results_array, "composite_figi", "N/A")
+    get!(results_array, "share_class_figi", "N/A")
+    get!(results_array, "market_cap", NaN)
+    get!(results_array, "phone_number", "N/A")
+
+    # get if no values - address dictionary
+    get!(results_array, "address", Dict("address1" => "N/A", "city" => "N/A", "state" => "N/A", "postal_code" => "N/A"))    
+    get!(results_array["address"], "address1", "N/A")
+    get!(results_array["address"], "city", "N/A")
+    get!(results_array["address"], "state", "N/A")
+    get!(results_array["address"], "postal_code", "N/A")
+
+    get!(results_array, "description", "N/A")
+    get!(results_array, "sic_code", "N/A")
+    get!(results_array, "sic_description", "N/A")
+    get!(results_array, "ticker_root", "N/A")
+    get!(results_array, "homepage_url", "N/A")
+    get!(results_array, "total_employees", NaN)
+    get!(results_array, "list_date", "N/A")
+
+    # get if no values - branding dictionary
+    get!(results_array, "branding", Dict("logo_url" => "N/A",  "icon_url" => "N/A"))
+    get!(results_array["branding"], "logo_url", "N/A")
+    get!(results_array["branding"], "icon_url", "N/A")
+
+    get!(results_array, "share_class_shares_outstanding", NaN)
+    get!(results_array, "share_class_shares_outstanding", NaN)
+    get!(results_array, "delisted_utc", "N/A")
+
+    # build results tuple -
+    result_tuple = (
+
+            ticker = results_array["ticker"],
+            name = results_array["name"],
+            market = results_array["market"],
+            locale = results_array["locale"],
+            primary_exchange = results_array["primary_exchange"],
+            type = results_array["type"],
+            active = results_array["active"],
+            currency_name = results_array["currency_name"],
+            cik = results_array["cik"],
+            composite_figi = results_array["composite_figi"],
+            share_class_figi = results_array["share_class_figi"],
+            market_cap = results_array["market_cap"],
+            phone_number = results_array["phone_number"],
+            address1 = results_array["address"]["address1"],
+            city = results_array["address"]["city"],
+            state = results_array["address"]["state"],
+            postal_code = results_array["address"]["postal_code"],
+            description = results_array["description"],
+            sic_code = results_array["sic_code"],
+            sic_description = results_array["sic_description"],
+            ticker_root = results_array["ticker_root"],
+            homepage_url = results_array["homepage_url"],
+            total_employees = results_array["total_employees"],
+            list_date = results_array["list_date"],
+            logo_url = results_array["branding"]["logo_url"],
+            icon_url = results_array["branding"]["icon_url"],        
+            share_class_shares_outstanding = results_array["share_class_shares_outstanding"],
+            weighted_shares_outstanding = results_array["weighted_shares_outstanding"],
+            delisted_utc = results_array["delisted_utc"]
+    );
+    
+    # grab and push into the dataframe -
+    push!(df, result_tuple)
+
+    # return -
+    return (header_dictionary, df)
+end
+
+function _process_market_holidays_call_response(body::String) #ycpan
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+
+    
+    # initialize -
+    header_dictionary = Dict{String,Any}()
+    df = DataFrame(
+
+        exchange = String[],
+        name = String[],
+        date = Date[],
+        status = String[],
+        open = String[],
+        close = String[]
+    );
+    
+    # populate the results DataFrame -
+    results_array = request_body_dictionary
+    for result_dictionary ∈ results_array
+        
+        get!(result_dictionary, "open", "N/A")
+        get!(result_dictionary, "close", "N/A")
+        
+        # build a results tuple -
+        result_tuple = (
+
+            exchange = result_dictionary["exchange"],
+            name = result_dictionary["name"],
+            date = Date(result_dictionary["date"]),
+            status = result_dictionary["status"],
+            open = result_dictionary["open"],
+            close = result_dictionary["close"]
+        );
+    
+        # push that tuple into the df -
+        push!(df, result_tuple)
+    end
+    
+    # return -
+    return (header_dictionary, df)
+end
+
+function _process_exchanges_call_response(body::String) #ycpan
 
     # convert to JSON -
     request_body_dictionary = JSON.parse(body)
 
     # before we do anything - check: do we have an error?
-    if (haskey(request_body_dictionary,"error") == true)
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+    
+    # initialize -
+    header_dictionary = Dict{String,Any}()
+    df = DataFrame(
+
+        id = Int[],
+        type = String[],
+        asset_class = String[],
+        locale = String[],
+        name = String[],
+        acronym = String[],
+        mic = String[],
+        operating_mic = String[],
+        participant_id = String[],
+        url = String[]
+
+    );
+    
+    # fill in the header dictionary -
+    header_keys = [
+        "status", "request_id", "count"
+    ];
+    
+    # check - do we have a count (if not resturn zero)
+    results_count = get!(request_body_dictionary, "count", 0)
+    
+    # if no result we return nothing
+    if (results_count == 0) # we have no results ...
+        
+        # return the header and nothing -
+        return (header_dictionary, nothing)
+    end
+    
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # populate the results DataFrame -
+    results_array = request_body_dictionary["results"]
+    for result_dictionary ∈ results_array
+        
+        # set some defaults in case of missing fields -
+        get!(result_dictionary, "acronym", "N/A")
+        get!(result_dictionary, "mic", "N/A")
+        get!(result_dictionary, "operating_mic", "N/A")
+        get!(result_dictionary, "participant_id", "N/A")
+        get!(result_dictionary, "url", "N/A")
+
+        result_tuple = (
+
+            id = result_dictionary["id"],
+            type = result_dictionary["type"],
+            asset_class = result_dictionary["asset_class"],
+            locale = result_dictionary["locale"],
+            name = result_dictionary["name"],
+            acronym = result_dictionary["acronym"],
+            mic = result_dictionary["mic"],
+            operating_mic = result_dictionary["operating_mic"],
+            participant_id = result_dictionary["participant_id"],
+            url = result_dictionary["url"]
+        );
+
+        push!(df, result_tuple)
+    end
+    
+    # return -
+    return (header_dictionary, df)
+end
+
+function _process_stock_splits_call_response(body::String) #ycpan
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+
+    # initialize -
+    header_dictionary = Dict{String,Any}()
+    df = DataFrame(
+
+        execution_date = Date[],
+        split_from = Int[],
+        split_to = Int[],
+        ticker = String[]
+    );
+    
+    # fill in the header dictionary -
+    header_keys = [
+        "status", "request_id"
+    ];
+    
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # if no result we return nothing
+    if (request_body_dictionary["results"] == Any[]) # we have no results ...
+        
+        # return the header and nothing -
+        return (header_dictionary, nothing)
+    end
+
+    # populate the results DataFrame -
+    results_array = request_body_dictionary["results"]
+    for result_dictionary ∈ results_array
+
+        result_tuple = (
+
+            execution_date = Date(result_dictionary["execution_date"]),
+            split_from = result_dictionary["split_from"],
+            split_to = result_dictionary["split_to"],
+            ticker = result_dictionary["ticker"] 
+        )
+
+        push!(df, result_tuple)
+    end
+    
+    # return -
+    return (header_dictionary, df)
+end
+
+function _process_market_status_call_response(body::String) # ycpan
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+    
+    #initialize -
+    header_dictionary = Dict{String,Any}()
+    df = DataFrame(
+        
+        serverTime = String[],
+        market = String[],
+        earlyHours = Bool[],
+        afterHours = Bool[],
+        nyse  = String[],
+        nasdaq  = String[],
+        otc = String[],
+        fx  = String[],
+        crypto  = String[]
+    );
+
+    # populate the results DataFrame -
+    results_array = request_body_dictionary
+    
+    # build a results tuple -
+    result_tuple = (
+        
+        serverTime = results_array["serverTime"],    
+        market = results_array["market"],
+        earlyHours = results_array["earlyHours"],
+        afterHours = results_array["afterHours"],
+        nyse = results_array["exchanges"]["nyse"],
+        nasdaq = results_array["exchanges"]["nasdaq"],
+        otc = results_array["exchanges"]["otc"],        
+        fx = results_array["currencies"]["fx"],
+        crypto = results_array["currencies"]["crypto"]
+    );
+    
+    # push that tuple into the df -
+    push!(df, result_tuple)
+    
+    # return -
+    return (header_dictionary, df)
+end
+
+function _process_dividends_call_response(body::String)
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+    
+    # before we do anything - check: do we have an error? can be due to stick or date
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "NOT_FOUND" || status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    #initialize -
+    header_dictionary = Dict{String,Any}()
+    df = DataFrame(
+
+            cash_amount = Float64[],
+            declaration_date = Date[],
+            dividend_type = String[],
+            ex_dividend_date = Date[],
+            frequency = Int[],
+            pay_date = Date[],
+            record_date = Date[],
+            ticker =String[]
+        )
+
+    # fill in the header dictionary -
+    header_keys = [
+        "status", "request_id","next_url"
+    ];
+
+    #fill in next_url if no value
+    get!(request_body_dictionary,"next_url", "N/A")
+
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+    
+    # if no results we return nothing
+    if (request_body_dictionary["results"] == Any[]) # we have no results ...
+        # return the header and nothing -
+        return (header_dictionary, nothing)
+    end
+
+
+    results_array = request_body_dictionary["results"]
+    for result_dictionary ∈ results_array
+
+        result_tuple = (
+
+                    cash_amount = result_dictionary["cash_amount"],
+                    declaration_date = Date(result_dictionary["declaration_date"]),
+                    dividend_type = result_dictionary["dividend_type"],
+                    ex_dividend_date = Date(result_dictionary["ex_dividend_date"]),
+                    frequency = result_dictionary["frequency"],
+                    pay_date = Date(result_dictionary["pay_date"]),
+                    record_date = Date(result_dictionary["record_date"]),
+                    ticker = result_dictionary["ticker"],
+
+                )
+
+        push!(df, result_tuple)
+    end
+    
+    # return -
+    return (header_dictionary, df)
+end
+
+function _process_tickers_call_response(body::String) #ycpan
+    
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+    
+    # before we do anything - check: do we have an error? can be due to stick or date
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
         return _polygon_error_handler(request_body_dictionary)
     end
 
@@ -313,81 +737,327 @@ function _process_ticker_details_call_response(body::String)
     header_dictionary = Dict{String,Any}()
     df = DataFrame(
 
-        logo = String[],
-        listdate = Date[],
-        cik = String[],
-        bloomberg = String[],
-        figi = Union{String,Nothing}[],
-        lei = Union{String,Nothing}[],
-        sic = Int[],
-        country = String[],
-        industry = String[],
-        sector = String[],
-        marketcap = Int[],
-        employees = Int[],
-        phone = String[],
-        ceo = String[],
-        url = String[],
-        description = String[],
-        exchange = String[],
+        ticker = String[],
         name = String[],
-        symbol = String[],
-        exchangeSymbol = String[],
-        hq_address = String[],
-        hq_state = String[],
-        hq_country = String[],
+        market = String[],
+        locale = String[],
+        active = Bool[],
+        primary_exchange = String[],
         type = String[],
-        updated = Date[],
-        tags = Array{Array{String,1},1}(),
-        similar = Array{Array{String,1},1}()
-    );
+        currency_name = String[],
+        cik = String[],
+        composite_figi = String[],
+        share_class_figi = String[],
+        last_updated_utc = String[],
+        delisted_utc = String[]
+
+        )
 
     # fill in the header dictionary -
     header_keys = [
-        "active"
+        "status", "request_id", "count", "next_url"
     ];
+
+    # fill in next_url if no value
+    get!(request_body_dictionary,"next_url", "N/A")
+    get!(request_body_dictionary,"count", 0)
+
     for key ∈ header_keys
         header_dictionary[key] = request_body_dictionary[key]
     end
 
-    # updated comes back in "non-standard" mm/dd/yyyy date format -
-    date_components = split(request_body_dictionary["updated"],"/")
+    # if no results we return nothing
+    if (request_body_dictionary["results"] == Any[]) # we have no results ...
+        # return the header and nothing -
+        return (header_dictionary, nothing)
+    end
 
-    # build a results tuple -
-    result_tuple = (
+    results_array = request_body_dictionary["results"]
+    for result_dictionary ∈ results_array
 
-        logo = request_body_dictionary["logo"],
-        listdate = Date(request_body_dictionary["listdate"]),
-        figi = request_body_dictionary["figi"],
-        cik = request_body_dictionary["cik"],
-        bloomberg = request_body_dictionary["bloomberg"],
-        lei = request_body_dictionary["lei"],
-        sic = request_body_dictionary["sic"],
-        country = request_body_dictionary["country"],
-        industry = request_body_dictionary["industry"],
-        sector = request_body_dictionary["sector"],
-        marketcap = request_body_dictionary["marketcap"],
-        employees = request_body_dictionary["employees"],
-        phone = request_body_dictionary["phone"],
-        ceo = request_body_dictionary["ceo"],
-        url = request_body_dictionary["url"],
-        description = request_body_dictionary["description"],
-        exchange = request_body_dictionary["exchange"],
-        name = request_body_dictionary["name"],
-        symbol = request_body_dictionary["symbol"],
-        exchangeSymbol = request_body_dictionary["exchangeSymbol"],
-        hq_address = request_body_dictionary["hq_address"],
-        hq_state = request_body_dictionary["hq_state"],
-        hq_country = request_body_dictionary["hq_country"],
-        type = request_body_dictionary["type"],
-        updated = Date("$(date_components[3])-$(date_components[1])-$(date_components[2])"),
-        tags = request_body_dictionary["tags"],
-        similar = request_body_dictionary["similar"]
-    )
+        #get if no values
+        get!(result_dictionary, "primary_exchange", "N/A")
+        get!(result_dictionary, "type", "N/A")
+        get!(result_dictionary, "currency_name", "N/A")
+        get!(result_dictionary, "cik", "N/A")
+        get!(result_dictionary, "composite_figi", "N/A")
+        get!(result_dictionary, "share_class_figi", "N/A")
+        get!(result_dictionary, "last_updated_utc", "N/A")
+        get!(result_dictionary, "delisted_utc", "N/A")
 
-    # push that tuple into the df -
-    push!(df, result_tuple)
+        result_tuple = (
+
+                    ticker = result_dictionary["ticker"],
+                    name = result_dictionary["name"],
+                    market = result_dictionary["market"],
+                    locale = result_dictionary["locale"],
+                    active = result_dictionary["active"],
+                    primary_exchange = result_dictionary["primary_exchange"],
+                    type = result_dictionary["type"],
+                    currency_name = result_dictionary["currency_name"],
+                    cik = result_dictionary["cik"],
+                    composite_figi = result_dictionary["composite_figi"],
+                    share_class_figi = result_dictionary["share_class_figi"],
+                    last_updated_utc = result_dictionary["last_updated_utc"],
+                    delisted_utc = result_dictionary["delisted_utc"]
+                )
+
+        push!(df, result_tuple)
+    end
+    
+    # return -
+    return (header_dictionary, df)
+end
+
+function _process_conditions_call_response(body::String) #ycpan
+    
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+    
+    # before we do anything - check: do we have an error? can be due to stick or date
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # initialize -
+    header_dictionary = Dict{String,Any}()
+    df = DataFrame(
+    
+        name = String[],#
+        asset_class = String[],#
+        data_types =  Array{Array{String,1},1}(),#
+        id = Int[],#
+        abbreviation = String[],
+        description = String[],
+        exchange = String[],
+        legacy = String[],
+        sip_mapping_CTA = String[],
+        sip_mapping_OPRA = String[],
+        sip_mapping_UTP = String[],
+        type = String[],#
+        consolidated_updates_high_low = String[],
+        consolidated_updates_open_close = String[],
+        consolidated_updates_volume = String[],
+        market_center_updates_high_low = String[],
+        market_center_updates_open_close = String[],
+        market_center_updates_volume = String[]
+
+    );
+
+    # fill in the header dictionary -
+    header_keys = [
+        "status", "request_id", "count", "next_url"
+    ];
+
+    #fill in next_url if no value
+    get!(request_body_dictionary,"next_url","N/A")
+    get!(request_body_dictionary,"count",0)
+
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # if no results we return nothing
+    if (request_body_dictionary["results"] == Any[]) # we have no results ...
+        # return the header and nothing -
+        return (header_dictionary, nothing)
+    end
+
+    results_array = request_body_dictionary["results"]
+    for result_dictionary ∈ results_array
+
+        #get if no values
+        get!(result_dictionary, "abbreviation", "N/A")
+        get!(result_dictionary, "description", "N/A")
+        get!(result_dictionary, "exchange", "N/A")
+        get!(result_dictionary, "legacy", "N/A")
+        get!(result_dictionary["sip_mapping"], "CTA", "N/A")
+        get!(result_dictionary["sip_mapping"], "OPRA", "N/A")
+        get!(result_dictionary["sip_mapping"], "UTP", "N/A")
+        get!(result_dictionary, "update_rules", Dict("consolidated"  => Dict("updates_high_low"   => "N/A",
+                                                                             "updates_open_close" => "N/A", 
+                                                                             "updates_volume"     => "N/A"), 
+                                                     "market_center" => Dict("updates_high_low"   => "N/A",
+                                                                             "updates_open_close" => "N/A",
+                                                                             "updates_volume"     => "N/A")))
+        result_tuple = (
+        
+                    name = result_dictionary["name"],
+                    asset_class = result_dictionary["asset_class"],
+                    data_types = result_dictionary["data_types"],
+                    id = result_dictionary["id"],
+                    abbreviation = result_dictionary["abbreviation"],
+                    description = result_dictionary["description"],
+                    exchange = string(result_dictionary["exchange"]),
+                    legacy = string(result_dictionary["legacy"]),                    
+                    sip_mapping_CTA = result_dictionary["sip_mapping"]["CTA"],
+                    sip_mapping_OPRA = result_dictionary["sip_mapping"]["OPRA"],
+                    sip_mapping_UTP = result_dictionary["sip_mapping"]["UTP"],
+                    type = result_dictionary["type"],                
+                    consolidated_updates_high_low = string(result_dictionary["update_rules"]["consolidated"]["updates_high_low"]),
+                    consolidated_updates_open_close = string(result_dictionary["update_rules"]["consolidated"]["updates_open_close"]),
+                    consolidated_updates_volume = string(result_dictionary["update_rules"]["consolidated"]["updates_volume"]),
+                    market_center_updates_high_low = string(result_dictionary["update_rules"]["market_center"]["updates_high_low"]),
+                    market_center_updates_open_close = string(result_dictionary["update_rules"]["market_center"]["updates_open_close"]),
+                    market_center_updates_volume = string(result_dictionary["update_rules"]["market_center"]["updates_volume"])
+                
+                )
+
+        push!(df, result_tuple)
+    end
 
     # return -
+    return (header_dictionary, df)
+end
+
+function _process_stock_financials_call_response(body::String) #ycpan
+    
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+    # before we do anything - check: do we have an error? can be due to stick or date
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # initialize -
+    header_dictionary = Dict{String, Any}()
+    df = DataFrame(
+
+        financials = String[],
+        content = String[],
+        label = String[], 
+        order = Int[],
+        unit = String[],
+        value = Float64[],
+        formula = String[],
+        xpath = String[]
+        )
+
+    # fill in the header dictionary -
+    header_keys = [
+                "status", "request_id", "count", "next_url"
+        ];
+
+    #addressing missing value in header dictionary -
+    get!(request_body_dictionary,"next_url","N/A")
+    get!(request_body_dictionary,"count",0)
+
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # if no results we return nothing
+    if (request_body_dictionary["results"] == Any[]) # we have no results ...
+        # return the header and nothing -
+        return (header_dictionary, nothing)
+    end
+
+
+    #pull out financials dictionary
+    results_array = request_body_dictionary["results"]
+    financials_dictionary = Dict{String, Any}()
+    
+    for result_dictionary ∈ results_array
+
+        #addressing missing values
+        get!(result_dictionary, "start_date", "N/A")
+        get!(result_dictionary, "end_date", "N/A")
+
+        #update header dictionary
+        header_dictionary["company_name"] = result_dictionary["company_name"]
+        header_dictionary["cik"] = result_dictionary["cik"]
+        header_dictionary["fiscal_period"] = result_dictionary["fiscal_period"]
+        header_dictionary["fiscal_year"] = result_dictionary["fiscal_year"]
+        header_dictionary["source_filing_file_url"] = result_dictionary["source_filing_file_url"]
+        header_dictionary["source_filing_url"] = result_dictionary["source_filing_url"]
+        header_dictionary["start_date"] = result_dictionary["start_date"]
+        header_dictionary["end_date"] = result_dictionary["end_date"]
+
+        #pull out financials dictionary
+        financials_dictionary =  result_dictionary["financials"]   
+
+    end
+
+    #filling dataframe with desired information
+    for i in keys(financials_dictionary)
+        for j in keys(financials_dictionary[i])
+
+            #addressing missing values
+            get!(financials_dictionary[i][j], "formula", "N/A")
+            get!(financials_dictionary[i][j], "xpath", "N/A")
+            result_tuple = (
+
+                financials = i,
+                content = j,
+                label = financials_dictionary[i][j]["label"],
+                order = financials_dictionary[i][j]["order"],
+                unit = financials_dictionary[i][j]["unit"],
+                value = financials_dictionary[i][j]["value"],
+                formula = financials_dictionary[i][j]["formula"],
+                xpath = financials_dictionary[i][j]["xpath"]
+            )
+            push!(df, result_tuple)
+        end
+    end
+    
+    # return -
+    return (header_dictionary, df)
+end
+
+function _process_ticker_types_call_response(body::String) #ycpan
+    
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+    # before we do anything - check: do we have an error? can be due to stick or date
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # initialize -
+    header_dictionary = Dict{String,Any}()
+    df = DataFrame(
+
+        code = String[],
+        description = String[],
+        asset_class = String[],
+        locale = String[]
+        )
+
+    # fill in the header dictionary -
+    header_keys = [
+                "status", "request_id", "count"
+        ];
+
+    #fill in next_url if no value
+    get!(request_body_dictionary,"count",0)
+
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # if no results we return nothing
+    if (request_body_dictionary["results"] == Any[]) # we have no results ...
+        # return the header and nothing -
+        return (header_dictionary, nothing)
+    end
+
+    results_array = request_body_dictionary["results"]
+    for result_dictionary ∈ results_array
+
+        result_tuple = (
+
+                    code = result_dictionary["code"],
+                    description = result_dictionary["description"],
+                    asset_class = result_dictionary["asset_class"],
+                    locale = result_dictionary["locale"]
+                )
+
+        push!(df, result_tuple)
+    end
+
+    # return - 
     return (header_dictionary, df)
 end

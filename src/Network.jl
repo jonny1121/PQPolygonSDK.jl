@@ -37,6 +37,17 @@ function _process_polygon_response(model::Type{T},
     type_handler_dict[PolygonTickerNewsEndpointModel] = _process_ticker_news_call_response
     type_handler_dict[PolygonTickerDetailsEndpointModel] = _process_ticker_details_call_response
 
+    # handlers from ycpan1012 -
+    type_handler_dict[PolygonMarketHolidaysEndpointModel] = _process_market_holidays_call_response #ycpan
+    type_handler_dict[PolygonExchangesEndpointModel] = _process_exchanges_call_response #ycpan
+    type_handler_dict[PolygonStockSplitsEndpointModel] = _process_stock_splits_call_response #ycpan
+    type_handler_dict[PolygonMarketStatusEndpointModel] = _process_market_status_call_response #ycpan
+    type_handler_dict[PolygonDividendsEndpointModel] = _process_dividends_call_response #ycpan
+    type_handler_dict[PolygonTickersEndpointModel] = _process_tickers_call_response #ycpan
+    type_handler_dict[PolygonConditionsEndpointModel] = _process_conditions_call_response #ycpan
+    type_handler_dict[PolygonStockFinancialsEndpointModel] = _process_stock_financials_call_response #ycpan
+    type_handler_dict[PolygonTickerTypesEndpointModel] = _process_ticker_types_call_response #ycpan
+
     # lookup the type -
     if (haskey(type_handler_dict, model) == true)
         handler_function = type_handler_dict[model]
