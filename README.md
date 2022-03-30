@@ -14,22 +14,16 @@ To use `PQPolygonSDK.jl` in your projects, issue the command:
 
     julia> using PQPolygonSDK
 
-## Quick Start Guide
-All [Polygon.io](https://polygon.io) application programming interface (API) calls start by creating a `PQPolygonSDKUserModel` object using the function:
+## Documentation
+Documentation for the `PQPolygonSDK.jl` package can be found [here](https://paliquant.github.io/PQPolygonSDKDocumentation/).
 
+## Disclaimer and Risks
+[Paliquant](https://www.paliquant.com) software and `PQPolygonSDK.jl` is offered solely for training and  informational purposes. No offer or solicitation to buy or sell securities or securities derivative products of any kind, or any type of investment or trading advice or strategy,  is made, given or in any manner endorsed by [Paliquant](https://www.paliquant.com).
 
-```julia    
-model(userModelType::Type{PQPolygonSDKUserModel}, 
-    options::Dict{String,Any}) -> PQPolygonSDKUserModel
-```
-    
-where the `options` dictionary holds `email` and `apikey` key value pairs. Once a user model has been created, that model
-is passed into an API endpoint specific `model` method:
+Trading involves risk. Carefully review your financial situation before investing in securities, futures contracts, options or commodity interests. Past performance, whether actual or indicated by historical tests of strategies, is no guarantee of future performance or success. Trading is generally not appropriate for someone with limited resources, investment or trading experience, or a low-risk tolerance.  Only risk capital that will not be needed for living expenses.
 
-```julia
-model(apiModelType::Type{T}, userModel::PQPolygonSDKUserModel, 
-        options::Dict{String,Any}) -> AbstractPolygonEndpointModel where T<:AbstractPolygonEndpointModel
-```
+You are fully responsible for any investment or trading decisions you make, and such decisions should be based solely on your evaluation of your financial circumstances, investment or trading objectives, risk tolerance and liquidity needs.
+
 
 
 
