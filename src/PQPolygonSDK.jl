@@ -40,5 +40,8 @@ export AbstractPolygonOptionsContractModel
 export PolygonPutOptionContractModel
 export PolygonCallOptionContractModel
 
+# options endpoints -
+export PolygonOptionsSnapshotEndpointModel
+
 
 end # module

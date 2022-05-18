@@ -313,8 +313,20 @@ function _process_options_snapshot_call_response(body::String)
         return _polygon_error_handler(request_body_dictionary)
     end
 
-    # finish me ...
+    # build the header dictionary -
+    header_dictionary = Dict{String,Any}()
+    header_keys = [
+        "status", "request_id"
+    ]
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
 
+    # build the results dictionary structure -
+    base_results_dictionary = request_body_dictionary["results"];
+
+    # return -
+    return (header_dictionary, base_results_dictionary)
 end
 
 # =================================================================================== #

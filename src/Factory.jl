@@ -247,6 +247,25 @@ function url(base::String, model::PolygonAggregatesEndpointModel;
     return _add_parameters_to_url_query_string(base_url, options_dictionary)
 end
 
+function url(base::String, model::PolygonOptionsSnapshotEndpointModel; 
+    apiversion::Int = 3)::String
+
+    # get data from the endpoint model -
+    underlying = model.underlying
+    ticker = model.ticker
+    apikey = model.apikey
+
+    # build up the base string -
+    base_url = "$(base)/v$(apiversion)/snapshot/options/$(underlying)/$(ticker)?"
+
+    # what keys are passed as parameters?
+    options_dictionary = Dict{String,Any}()
+	options_dictionary["apiKey"] = apikey
+
+    # return -
+    return _add_parameters_to_url_query_string(base_url, options_dictionary)
+end
+
 # url methods from ycpan1012 -
 function url(base::String, model::PolygonTickerDetailsEndpointModel; #ycpan
     apiversion::Int = 3)::String

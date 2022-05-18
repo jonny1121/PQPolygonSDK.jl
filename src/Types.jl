@@ -253,6 +253,7 @@ mutable struct PolygonOptionsSnapshotEndpointModel <: AbstractPolygonEndpointMod
     # data -
     underlying::String
     ticker::String
+    apikey::String
 
     # constructor -
     PolygonOptionsSnapshotEndpointModel() = new()
