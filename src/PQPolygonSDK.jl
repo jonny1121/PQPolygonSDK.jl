@@ -42,6 +42,7 @@ export PolygonCallOptionContractModel
 
 # options endpoints -
 export PolygonOptionsSnapshotEndpointModel
+export PolygonOptionsLastTradeEndpointModel
 
 
 end # module

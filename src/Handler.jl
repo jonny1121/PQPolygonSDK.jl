@@ -329,6 +329,33 @@ function _process_options_snapshot_call_response(body::String)
     return (header_dictionary, base_results_dictionary)
 end
 
+function _process_options_last_trade_call_response(body::String)
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+
+    # before we do anything - check: do we have an error?
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "NOT_FOUND")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # build the header dictionary -
+    header_dictionary = Dict{String,Any}()
+    header_keys = [
+        "status", "request_id"
+    ]
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # build the results dictionary structure -
+    base_results_dictionary = request_body_dictionary["results"];
+
+    # return -
+    return (header_dictionary, base_results_dictionary)
+end
+
 # =================================================================================== #
 # handlers developed by ycpan1012 -
 function _process_ticker_details_call_response(body::String) #ycpan

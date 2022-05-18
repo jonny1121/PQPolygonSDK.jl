@@ -259,6 +259,16 @@ mutable struct PolygonOptionsSnapshotEndpointModel <: AbstractPolygonEndpointMod
     PolygonOptionsSnapshotEndpointModel() = new()
 end
 
+mutable struct PolygonOptionsLastTradeEndpointModel <: AbstractPolygonEndpointModel
+
+    # data -
+    ticker::String
+    apikey::String
+
+    # constructor -
+    PolygonOptionsLastTradeEndpointModel() = new()
+end
+
 mutable struct PolygonOptionsContractReferenceEndpoint <: AbstractPolygonEndpointModel
 
     # data -

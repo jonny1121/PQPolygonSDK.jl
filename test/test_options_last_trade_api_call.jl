@@ -22,13 +22,12 @@ user_model = model(PQPolygonSDKUserModel, options)
 
 # build the endpoint model -
 endpoint_options = Dict{String,Any}()
-endpoint_options["underlying"] = "MU"
 endpoint_options["ticker"] = options_ticker
-endpoint_model = model(PolygonOptionsSnapshotEndpointModel, user_model, endpoint_options)
+endpoint_model = model(PolygonOptionsLastTradeEndpointModel, user_model, endpoint_options)
 
 # build the url -
 base = "https://api.polygon.io"
 my_url_string = url(base, endpoint_model)
 
 # make the call -
-(header, data) = api(PolygonOptionsSnapshotEndpointModel, my_url_string)
+(header, data) = api(PolygonOptionsLastTradeEndpointModel, my_url_string)
