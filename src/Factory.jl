@@ -83,6 +83,35 @@ function model(apiModelType::Type{T},
     return model
 end
 
+function model(contractModelType::Type{T}, 
+    options::Dict{String,Any})::AbstractPolygonOptionsContractModel where T <: AbstractPolygonOptionsContractModel
+    
+    # initialize -
+    model = eval(Meta.parse("$(contractModelType)()")) # empty endpoint contract model -
+
+    # for the result of the fields, let's lookup in the dictionary.
+    # error state: if the dictionary is missing a value -
+    for field_name_symbol ∈ fieldnames(contractModelType)
+        
+        # convert the field_name_symbol to a string -
+        field_name_string = string(field_name_symbol)
+        
+        # check the for the key -
+        if (haskey(options,field_name_string) == false)
+            throw(ArgumentError("dictionary is missing: $(field_name_string)"))    
+        end
+
+        # get the value -
+        value = options[field_name_string]
+
+        # set -
+        setproperty!(model,field_name_symbol,value)
+    end
+
+    # return -
+    return model
+end
+
 # -- URL FACTORY METHODS BELOW HERE --------------------------------------------------- #
 function url(base::String, model::PolygonTickerNewsEndpointModel; 
     apiversion::Int = 2)::String
@@ -309,7 +338,7 @@ function url(base::String, model::PolygonStockSplitsEndpointModel; #ycpan
     options_dictionary["sort"] = sort
     options_dictionary["apiKey"] = apikey
     
-    #not all parameters are required, if we have N/A input, we remove it"
+    # not all parameters are required, if we have N/A input, we remove it"
     for options ∈ keys(options_dictionary)
         if options_dictionary[options] == "N/A"
             pop!(options_dictionary, options)
@@ -541,3 +570,34 @@ function url(base::String, model::PolygonTickerTypesEndpointModel; #ycpan
     return _add_parameters_to_url_query_string(base_url, options_dictionary)
 end
 # -- URL FACTORY METHODS ABOVE HERE --------------------------------------------------- #
+
+# -- OPTIONS TICKER FACTORY METHODS BELOW HERE ---------------------------------------- #
+function ticker(contractModelObject::T)::String where T <: AbstractPolygonOptionsContractModel
+
+    # get data from the contract model -
+    underlying = contractModelObject.underlying
+    expiration = contractModelObject.expiration
+    K = contractModelObject.strike
+
+    # build components for the options ticker -
+    ticker_component = uppercase(underlying)
+    YY = year(expiration) - 2000 # hack to get 2 digit year 
+    MM = lpad(month(expiration), 2, "0")
+    DD = lpad(day(expiration), 2, "0")
+
+    # what type of contract do we have?
+    contract_type = "C"
+    if (isa(contractModelObject, PolygonPutOptionContractModel) == true)
+         contract_type = "P"
+    end
+
+    # compute the price code -
+    strike_component = lpad(convert(Int64,K*1000), 8, "0")
+
+    # build the ticker string -
+    ticker_string = "O:$(ticker_component)$(YY)$(MM)$(DD)$(contract_type)$(strike_component)"
+    
+    # return -
+    return ticker_string
+end
+# -- OPTIONS TICKER FACTORY METHODS ABOVE HERE ---------------------------------------- #

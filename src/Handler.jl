@@ -299,6 +299,25 @@ function _process_ticker_news_call_response(body::String)
     return (header_dictionary, df)
 end
 
+function _process_options_snapshot_call_response(body::String)
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+
+    # NOTE: the API doesn't return a consistent set of error conditions,
+    # we can put nonsense into the ticker string and status is still ok?
+
+    # before we do anything - check: do we have an error?
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # finish me ...
+
+end
+
+# =================================================================================== #
 # handlers developed by ycpan1012 -
 function _process_ticker_details_call_response(body::String) #ycpan
 
@@ -1061,3 +1080,4 @@ function _process_ticker_types_call_response(body::String) #ycpan
     # return - 
     return (header_dictionary, df)
 end
+# =================================================================================== #

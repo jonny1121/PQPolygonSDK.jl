@@ -9,6 +9,7 @@ end
 
 # what is the base type for all endpoint calls?
 abstract type AbstractPolygonEndpointModel end
+abstract type AbstractPolygonOptionsContractModel end
 
 mutable struct PolygonGroupedDailyEndpointModel <: AbstractPolygonEndpointModel
 
@@ -85,22 +86,6 @@ mutable struct PolygonTickerDetailsEndpointModel <: AbstractPolygonEndpointModel
 
     # constructor -
     PolygonTickerDetailsEndpointModel() = new()
-end
-
-mutable struct PolygonOptionsContractReferenceEndpoint <: AbstractPolygonEndpointModel
-
-    # data -
-    ticker::Union{Nothing,String}
-    underlying_ticker::Union{Nothing, String}
-    contract_type::String
-    expiration_date::Date
-    limit::Int64
-    order::String
-    sort::String
-    apikey::String
-
-    # constructor -
-    PolygonOptionsContractReferenceEndpoint() = new()
 end
 
 # endpoints from ycpan1012
@@ -237,3 +222,55 @@ mutable struct PolygonTickerTypesEndpointModel <: AbstractPolygonEndpointModel #
     # constructor -
     PolygonTickerTypesEndpointModel() = new()
 end
+
+# options contract models -
+mutable struct PolygonCallOptionContractModel <: AbstractPolygonOptionsContractModel
+    
+    # data -
+    underlying::String
+    expiration::Date
+    strike::Float64
+    
+    # constructor -
+    PolygonCallOptionContractModel() = new()
+end
+
+mutable struct PolygonPutOptionContractModel <: AbstractPolygonOptionsContractModel
+    
+    # data -
+    underlying::String
+    expiration::Date
+    strike::Float64
+
+    # constructor -
+    PolygonPutOptionContractModel() = new()
+end
+
+# === OPTIONS CONTRACT ENDPOINTS BELOW HERE ========================================================== #
+# options endpoints -
+mutable struct PolygonOptionsSnapshotEndpointModel <: AbstractPolygonEndpointModel
+
+    # data -
+    underlying::String
+    ticker::String
+
+    # constructor -
+    PolygonOptionsSnapshotEndpointModel() = new()
+end
+
+mutable struct PolygonOptionsContractReferenceEndpoint <: AbstractPolygonEndpointModel
+
+    # data -
+    ticker::Union{Nothing,String}
+    underlying_ticker::Union{Nothing, String}
+    contract_type::String
+    expiration_date::Date
+    limit::Int64
+    order::String
+    sort::String
+    apikey::String
+
+    # constructor -
+    PolygonOptionsContractReferenceEndpoint() = new()
+end
+# === OPTIONS CONTRACT ENDPOINTS ABOVE HERE ========================================================== #

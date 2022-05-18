@@ -7,6 +7,7 @@ include("Include.jl")
 export model
 export url
 export api
+export ticker
 
 # types -
 export AbstractPolygonEndpointModel
@@ -33,6 +34,11 @@ export PolygonTickersEndpointModel
 export PolygonConditionsEndpointModel
 export PolygonStockFinancialsEndpointModel
 export PolygonTickerTypesEndpointModel 
+
+# contract endpoints -
+export AbstractPolygonOptionsContractModel
+export PolygonPutOptionContractModel
+export PolygonCallOptionContractModel
 
 
 end # module
