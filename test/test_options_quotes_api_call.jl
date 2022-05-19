@@ -15,7 +15,7 @@ options_ticker = ticker(put_contract_model)
 # build a user model -
 options = Dict{String,Any}()
 options["email"] = "jvarner@paliquant.com"
-options["apikey"] = "t9aBscv_R5BGecynbrcTi7vnD5rSxt1I" # do _not_ check in a real API key 
+options["apikey"] = "abc1234" # do _not_ check in a real API key 
 
 # build the user model -
 user_model = model(PQPolygonSDKUserModel, options)

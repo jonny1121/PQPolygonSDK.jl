@@ -1,6 +1,6 @@
 name = "PQPolygonSDK"
 uuid = "a9381516-e38f-4c81-935c-32707fb4df4c"
-authors = ["Varnerlab <jvarner@paliquant.com>"]
+authors = ["Varnerlab <jvarner@pooksoft.com>"]
 version = "0.1.6"
 
 [deps]
