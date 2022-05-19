@@ -284,4 +284,20 @@ mutable struct PolygonOptionsContractReferenceEndpoint <: AbstractPolygonEndpoin
     # constructor -
     PolygonOptionsContractReferenceEndpoint() = new()
 end
+
+mutable struct PolygonOptionsQuotesEndpointModel <: AbstractPolygonEndpointModel
+
+    # required -
+    ticker::String
+    timestamp::Date
+    apikey::String
+
+    # additional -
+    order::Union{Nothing,String}
+    limit::Union{Nothing,Int}
+    sort::Union{Nothing,String}
+    
+    # constructor -
+    PolygonOptionsQuotesEndpointModel() = new()
+end
 # === OPTIONS CONTRACT ENDPOINTS ABOVE HERE ========================================================== #

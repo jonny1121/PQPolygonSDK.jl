@@ -5,7 +5,11 @@ function _add_parameters_to_url_query_string(base::String, options::Dict{String,
 
     parameters = ""
     for (key, value) in options
-        parameters *= "$(key)=$(value)&"
+
+        # don't add stuff that is nothing
+        if (isnothing(value) == false)
+            parameters *= "$(key)=$(value)&"
+        end
     end
 
     # cut off trailing &
@@ -280,6 +284,32 @@ function url(base::String, model::PolygonOptionsLastTradeEndpointModel;
     # what keys are passed as parameters?
     options_dictionary = Dict{String,Any}()
 	options_dictionary["apiKey"] = apikey
+
+    # return -
+    return _add_parameters_to_url_query_string(base_url, options_dictionary)
+end
+
+function url(base::String, model::PolygonOptionsQuotesEndpointModel; 
+    apiversion::Int = 3)::String
+
+    # get data from the endpoint model -
+    ticker = model.ticker
+    timestamp = model.timestamp
+    apikey = model.apikey
+    order = model.order
+    limit = model.limit
+    sort = model.sort
+
+    # build up the base string -
+    base_url = "$(base)/v$(apiversion)/quotes/$(ticker)?"
+
+    # what keys are passed as parameters?
+    options_dictionary = Dict{String,Any}()
+    options_dictionary["apiKey"] = apikey
+    options_dictionary["timestamp"] = timestamp
+    options_dictionary["order"] = order
+    options_dictionary["limit"] = limit
+    options_dictionary["sort"] = sort
 
     # return -
     return _add_parameters_to_url_query_string(base_url, options_dictionary)

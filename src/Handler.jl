@@ -356,6 +356,58 @@ function _process_options_last_trade_call_response(body::String)
     return (header_dictionary, base_results_dictionary)
 end
 
+function _process_options_quotes_call_response(body::String)
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+
+    # before we do anything - check: do we have an error?
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # check: do we have a next_url?
+    get!(request_body_dictionary, "next_url", "")
+
+    # build the header dictionary -
+    header_dictionary = Dict{String,Any}()
+    header_keys = [
+        "status", "request_id", "next_url"
+    ]
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # build a df -
+    df = DataFrame()
+
+    # populate the results DataFrame -    
+    results_array = request_body_dictionary["results"]
+    for result_dictionary ∈ results_array  
+        
+        # build a results tuple -
+        result_tuple = (
+            
+            ask_exchange = result_dictionary["ask_exchange"],
+            ask_price = result_dictionary["ask_price"],
+            ask_size = result_dictionary["ask_size"],
+            bid_exchange = result_dictionary["bid_exchange"],
+            bid_price = result_dictionary["bid_price"],
+            bid_size = result_dictionary["bid_size"],
+            sequence_number = result_dictionary["sequence_number"],
+            sip_timestamp = result_dictionary["sip_timestamp"]
+        )
+
+        # push that tuple into the df -
+        push!(df, result_tuple)
+    end 
+
+
+    # return -
+    return (header_dictionary, df)
+end
+
 # =================================================================================== #
 # handlers developed by ycpan1012 -
 function _process_ticker_details_call_response(body::String) #ycpan
