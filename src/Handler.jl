@@ -408,6 +408,75 @@ function _process_options_quotes_call_response(body::String)
     return (header_dictionary, df)
 end
 
+function _process_stock_trades_call_response(body::String)
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+
+    # before we do anything - check: do we have an error?
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # check: do we have a next_url?
+    get!(request_body_dictionary, "next_url", "")
+
+    # build the header dictionary -
+    header_dictionary = Dict{String,Any}()
+    header_keys = [
+        "status", "request_id", "next_url"
+    ]
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # build a df -
+    df = DataFrame()
+
+    # check: if results is empty, then return Nothing in data -
+    results_array = request_body_dictionary["results"]
+    if (isempty(results_array) == true)
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # populate the results DataFrame -  
+    # process the results -
+    for result_dictionary ∈ results_array  
+        
+        # check: do we have a conditions block?
+        get!(result_dictionary, "conditions", [0])
+        get!(result_dictionary, "trf_id", 0)
+
+         # handle the conditions array -
+         tmp_value_array = result_dictionary["conditions"]
+         conditions_array = Array{Int64,1}()
+         for value ∈ tmp_value_array
+             push!(conditions_array, value)
+         end 
+
+        # build a results tuple -
+        result_tuple = (
+            
+            conditions = conditions_array,
+            exchange = result_dictionary["exchange"],
+            id = result_dictionary["id"],
+            price = result_dictionary["price"],
+            sequence_number = result_dictionary["sequence_number"],
+            sip_timestamp = result_dictionary["sip_timestamp"],
+            size_value = result_dictionary["size"],
+            tape = result_dictionary["tape"],
+            trf_id = result_dictionary["trf_id"]
+        )
+
+        # push that tuple into the df -
+        push!(df, result_tuple)
+    end 
+
+    # return -
+    return (header_dictionary, df)
+end
+
 # =================================================================================== #
 # handlers developed by ycpan1012 -
 function _process_ticker_details_call_response(body::String) #ycpan

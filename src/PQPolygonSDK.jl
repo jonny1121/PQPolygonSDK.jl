@@ -24,6 +24,7 @@ export PolygonDailyOpenCloseEndpointModel
 export PolygonTickerNewsEndpointModel
 export PolygonTickerDetailsEndpointModel
 
+
 # endpoint models from ycpan1012 
 export PolygonMarketHolidaysEndpointModel
 export PolygonExchangesEndpointModel
@@ -44,6 +45,9 @@ export PolygonCallOptionContractModel
 export PolygonOptionsSnapshotEndpointModel
 export PolygonOptionsLastTradeEndpointModel
 export PolygonOptionsQuotesEndpointModel
+
+# stocks endpoints -
+export PolygonStockTradesEndpointModel
 
 
 end # module

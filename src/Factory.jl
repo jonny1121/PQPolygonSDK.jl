@@ -315,6 +315,33 @@ function url(base::String, model::PolygonOptionsQuotesEndpointModel;
     return _add_parameters_to_url_query_string(base_url, options_dictionary)
 end
 
+# Stock specific endpoints -
+function url(base::String, model::PolygonStockTradesEndpointModel; 
+    apiversion::Int = 3)::String
+
+    # get data from the endpoint model -
+    ticker = model.ticker
+    timestamp = model.timestamp
+    apikey = model.apikey
+    order = model.order
+    limit = model.limit
+    sort = model.sort
+
+    # build up the base string -
+    base_url = "$(base)/v$(apiversion)/trades/$(ticker)?"
+
+    # what keys are passed as parameters?
+    options_dictionary = Dict{String,Any}()
+    options_dictionary["apiKey"] = apikey
+    options_dictionary["timestamp"] = timestamp
+    options_dictionary["order"] = order
+    options_dictionary["limit"] = limit
+    options_dictionary["sort"] = sort
+
+    # return -
+    return _add_parameters_to_url_query_string(base_url, options_dictionary)
+end
+
 # url methods from ycpan1012 -
 function url(base::String, model::PolygonTickerDetailsEndpointModel; #ycpan
     apiversion::Int = 3)::String

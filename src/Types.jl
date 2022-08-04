@@ -62,7 +62,6 @@ mutable struct PolygonAggregatesEndpointModel <: AbstractPolygonEndpointModel
     PolygonAggregatesEndpointModel() = new()
 end
 
-
 mutable struct PolygonTickerNewsEndpointModel <: AbstractPolygonEndpointModel
 
     # data -
@@ -301,3 +300,21 @@ mutable struct PolygonOptionsQuotesEndpointModel <: AbstractPolygonEndpointModel
     PolygonOptionsQuotesEndpointModel() = new()
 end
 # === OPTIONS CONTRACT ENDPOINTS ABOVE HERE ========================================================== #
+
+# === STOCK ENDPOINTS BELOW HERE ===================================================================== #
+mutable struct PolygonStockTradesEndpointModel <: AbstractPolygonEndpointModel
+
+    # required -
+    ticker::String
+    timestamp::Date
+    apikey::String
+
+    # additional -
+    order::Union{Nothing,String}
+    limit::Union{Nothing,Int}
+    sort::Union{Nothing,String}
+
+    # constructor -
+    PolygonStockTradesEndpointModel() = new()
+end
+# === STOCK ENDPOINTS ABOVE HERE ===================================================================== #
