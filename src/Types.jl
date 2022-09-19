@@ -299,6 +299,22 @@ mutable struct PolygonOptionsQuotesEndpointModel <: AbstractPolygonEndpointModel
     # constructor -
     PolygonOptionsQuotesEndpointModel() = new()
 end
+
+mutable struct PolygonOptionsTradesEndpointModel <: AbstractPolygonEndpointModel
+
+    # required -
+    ticker::String
+    timestamp::Union{Nothing, Date}
+    apikey::String
+
+    # additional -
+    order::Union{Nothing,String}
+    limit::Union{Nothing,Int}
+    sort::Union{Nothing,String}
+
+    # constructor -
+    PolygonOptionsTradesEndpointModel() = new()
+end
 # === OPTIONS CONTRACT ENDPOINTS ABOVE HERE ========================================================== #
 
 # === STOCK ENDPOINTS BELOW HERE ===================================================================== #

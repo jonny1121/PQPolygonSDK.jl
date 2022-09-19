@@ -45,6 +45,7 @@ export PolygonCallOptionContractModel
 export PolygonOptionsSnapshotEndpointModel
 export PolygonOptionsLastTradeEndpointModel
 export PolygonOptionsQuotesEndpointModel
+export PolygonOptionsTradesEndpointModel
 
 # stocks endpoints -
 export PolygonStockTradesEndpointModel

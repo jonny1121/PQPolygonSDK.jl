@@ -40,6 +40,7 @@ function _process_polygon_response(model::Type{T},
     type_handler_dict[PolygonOptionsLastTradeEndpointModel] = _process_options_last_trade_call_response
     type_handler_dict[PolygonOptionsQuotesEndpointModel] = _process_options_quotes_call_response
     type_handler_dict[PolygonStockTradesEndpointModel] = _process_stock_trades_call_response
+    type_handler_dict[PolygonOptionsTradesEndpointModel] = _process_options_trade_call_response
 
     # handlers from ycpan1012 -
     type_handler_dict[PolygonMarketHolidaysEndpointModel] = _process_market_holidays_call_response #ycpan
