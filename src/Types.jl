@@ -334,3 +334,17 @@ mutable struct PolygonStockTradesEndpointModel <: AbstractPolygonEndpointModel
     PolygonStockTradesEndpointModel() = new()
 end
 # === STOCK ENDPOINTS ABOVE HERE ===================================================================== #
+
+# === TECHNICAL INDICATOR ENDPOINTS BELOW HERE ======================================================= #
+mutable struct PolygonTechnicalIndicatorSMAEndpoiunt <: AbstractPolygonEndpointModel
+end
+
+mutable struct PolygonTechnicalIndicatorEMAEndpoiunt <: AbstractPolygonEndpointModel
+end
+
+mutable struct PolygonTechnicalIndicatorMACDEndpoiunt <: AbstractPolygonEndpointModel
+end
+
+mutable struct PolygonTechnicalIndicatorRSIEndpoiunt <: AbstractPolygonEndpointModel
+end
+# === TECHNICAL INDICATOR ENDPOINTS ABOVE HERE ======================================================= #
