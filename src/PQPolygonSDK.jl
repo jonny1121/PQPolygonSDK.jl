@@ -50,5 +50,8 @@ export PolygonOptionsTradesEndpointModel
 # stocks endpoints -
 export PolygonStockTradesEndpointModel
 
+# technical indicator endpoint -
+export PolygonTechnicalIndicatorSMAEndpointModel
+
 
 end # module

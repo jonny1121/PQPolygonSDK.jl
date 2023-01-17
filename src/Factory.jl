@@ -689,6 +689,40 @@ function url(base::String, model::PolygonTickerTypesEndpointModel; #ycpan
     # return -
     return _add_parameters_to_url_query_string(base_url, options_dictionary)
 end
+
+function url(base::String, model::PolygonTechnicalIndicatorSMAEndpointModel; 
+    apiversion::Int = 1)::String
+
+    # get data from the API call data -
+    apikey = model.apikey
+    ticker = model.ticker
+    timespan = model.timespan
+    timestamp = model.timestamp
+    adjusted = model.adjusted
+    window = model.window
+    series_type = model.series_type
+    expand_underlying = model.expand_underlying
+    order = model.order
+    limit = model.limit
+
+    # build up the base string -
+    base_url = "$(base)/v$(apiversion)/indicators/sma/$(ticker)?"
+
+    # what keys are passed as parameters?
+    options_dictionary = Dict{String,Any}()
+    options_dictionary["apiKey"] = apikey
+    options_dictionary["timespan"] = timespan
+    options_dictionary["timestamp"] = timestamp
+    options_dictionary["adjusted"] = adjusted
+    options_dictionary["window"] = window
+    options_dictionary["series_type"] = series_type
+    options_dictionary["expand_underlying"] = expand_underlying
+    options_dictionary["order"] = order
+    options_dictionary["limit"] = limit
+
+    # return -
+    return _add_parameters_to_url_query_string(base_url, options_dictionary)
+end
 # -- URL FACTORY METHODS ABOVE HERE --------------------------------------------------- #
 
 # -- OPTIONS TICKER FACTORY METHODS BELOW HERE ---------------------------------------- #

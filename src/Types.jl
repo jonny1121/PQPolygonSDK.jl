@@ -336,15 +336,30 @@ end
 # === STOCK ENDPOINTS ABOVE HERE ===================================================================== #
 
 # === TECHNICAL INDICATOR ENDPOINTS BELOW HERE ======================================================= #
-mutable struct PolygonTechnicalIndicatorSMAEndpoiunt <: AbstractPolygonEndpointModel
+mutable struct PolygonTechnicalIndicatorSMAEndpointModel <: AbstractPolygonEndpointModel
+
+    # data
+    ticker::String
+    apikey::String
+    timespan::String
+    timestamp::Union{Nothing, Date}
+    adjusted::Union{Nothing,Bool}
+    window::Union{Nothing,Int}
+    series_type::Union{Nothing,String}
+    expand_underlying::Union{Nothing,Bool}
+    order::Union{Nothing,String}
+    limit::Union{Nothing,Int}
+
+    # constructor -
+    PolygonTechnicalIndicatorSMAEndpointModel() = new()
 end
 
-mutable struct PolygonTechnicalIndicatorEMAEndpoiunt <: AbstractPolygonEndpointModel
+mutable struct PolygonTechnicalIndicatorEMAEndpointModel <: AbstractPolygonEndpointModel
 end
 
-mutable struct PolygonTechnicalIndicatorMACDEndpoiunt <: AbstractPolygonEndpointModel
+mutable struct PolygonTechnicalIndicatorMACDEndpointModel <: AbstractPolygonEndpointModel
 end
 
-mutable struct PolygonTechnicalIndicatorRSIEndpoiunt <: AbstractPolygonEndpointModel
+mutable struct PolygonTechnicalIndicatorRSIEndpointModel <: AbstractPolygonEndpointModel
 end
 # === TECHNICAL INDICATOR ENDPOINTS ABOVE HERE ======================================================= #
