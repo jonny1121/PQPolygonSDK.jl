@@ -52,6 +52,7 @@ export PolygonStockTradesEndpointModel
 
 # technical indicator endpoint -
 export PolygonTechnicalIndicatorSMAEndpointModel
+export PolygonTechnicalIndicatorEMAEndpointModel
 
 
 end # module

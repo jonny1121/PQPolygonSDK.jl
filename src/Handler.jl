@@ -1401,4 +1401,98 @@ function _process_ti_sma_call_response(body::String)
     # ok, so we have *two* data frames and a header -
     return (header_dictionary, df_sma, df_underlying);
 end
+
+function _process_ti_ema_call_response(body::String)
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+    
+    # before we do anything - check: do we have an error? can be due to stick or date
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # check: do we have a next_url?
+    # if not, add an empty value
+    get!(request_body_dictionary, "next_url", "")    
+
+    # build the header dictionary -
+    header_dictionary = Dict{String,Any}()
+    header_keys = [
+        "status", "request_id", "next_url"
+    ]
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # check: if results is empty, then return Nothing in data -
+    results_dictionary = request_body_dictionary["results"]
+    if (isempty(results_dictionary) == true)
+        return _polygon_error_handler(request_body_dictionary)
+    end
+    
+    # we have results, build a data frame and package up -
+    # process values first -
+    sma_data_array = results_dictionary["values"];
+
+    df_ema = DataFrame(
+        timestamp = DateTime[],
+        value = Float64[]
+    );
+    for data_dictionary ∈ sma_data_array
+        
+        # build the results tuple -
+        results_tuple = (
+            timestamp = unix2datetime(data_dictionary["timestamp"]*(1/1000)),
+            value = data_dictionary["value"]
+        );
+    
+        # push -
+        push!(df_ema, results_tuple)
+    end
+
+    # ok, so if we have no underlying, then we can exit -
+    if (haskey(results_dictionary, "underlying") == false)
+        return (header_dictionary, df_ema, nothing)
+    end
+
+    # ok, so if we get get here, then we have extra data. 
+    # Need to build a data from to hold it -
+    df_underlying = DataFrame(
+        T = String[],
+        c = Float64[],
+        h = Float64[],
+        l = Float64[],
+        n = Int[],
+        o = Float64[],
+        t = DateTime[],
+        v = Int64[],
+        vw = Float64[]
+    );
+
+    # get aggregates data -
+    aggregates_data_array = results_dictionary["underlying"]["aggregates"]
+    for data_dictionary ∈ aggregates_data_array
+        
+        # build the results tuple -
+        results_tuple = (
+            T = data_dictionary["T"],
+            c = data_dictionary["c"],
+            h = data_dictionary["h"],
+            l = data_dictionary["l"],
+            n = data_dictionary["n"],
+            o = data_dictionary["o"],
+            t = unix2datetime(data_dictionary["t"]*(1/1000)),
+            v = data_dictionary["v"],
+            vw = data_dictionary["vw"]
+        );
+    
+        # grab these results -
+        push!(df_underlying, results_tuple)
+    end
+
+    # ok, so we have *two* data frames and a header -
+    return (header_dictionary, df_ema, df_underlying);
+end
 # =================================================================================== #

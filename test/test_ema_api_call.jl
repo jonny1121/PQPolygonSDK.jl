@@ -9,10 +9,6 @@ options["apikey"] = "abc123" # do _not_ check in a real API key
 
 # build the user model -
 user_model = model(PQPolygonSDKUserModel, options)
-
-# build the user model -
-user_model = model(PQPolygonSDKUserModel, options)
-
 # endpoint data -
 # ticker::String
 # apikey::String
@@ -37,13 +33,11 @@ endpoint_options["adjusted"] = true
 endpoint_options["timespan"] = "day"
 endpoint_options["ticker"] = "AMD"
 endpoint_options["timestamp"] = nothing
-endpoint_model = model(PolygonTechnicalIndicatorSMAEndpointModel, user_model, endpoint_options)
+endpoint_model = model(PolygonTechnicalIndicatorEMAEndpointModel, user_model, endpoint_options)
 
 # build the url -
 base = "https://api.polygon.io"
 my_url_string = url(base, endpoint_model)
 
 # make the call -
-(header, df_sma, df_underlying) = api(PolygonTechnicalIndicatorSMAEndpointModel, my_url_string)
-
-
+(header, df_ema, df_underlying) = api(PolygonTechnicalIndicatorEMAEndpointModel, my_url_string)

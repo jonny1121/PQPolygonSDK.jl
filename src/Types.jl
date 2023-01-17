@@ -355,6 +355,21 @@ mutable struct PolygonTechnicalIndicatorSMAEndpointModel <: AbstractPolygonEndpo
 end
 
 mutable struct PolygonTechnicalIndicatorEMAEndpointModel <: AbstractPolygonEndpointModel
+
+    # data
+    ticker::String
+    apikey::String
+    timespan::String
+    timestamp::Union{Nothing, Date}
+    adjusted::Union{Nothing,Bool}
+    window::Union{Nothing,Int}
+    series_type::Union{Nothing,String}
+    expand_underlying::Union{Nothing,Bool}
+    order::Union{Nothing,String}
+    limit::Union{Nothing,Int}
+
+    # constructor -
+    PolygonTechnicalIndicatorEMAEndpointModel() = new()
 end
 
 mutable struct PolygonTechnicalIndicatorMACDEndpointModel <: AbstractPolygonEndpointModel
