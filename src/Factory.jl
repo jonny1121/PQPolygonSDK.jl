@@ -757,6 +757,44 @@ function url(base::String, model::PolygonTechnicalIndicatorEMAEndpointModel;
     # return -
     return _add_parameters_to_url_query_string(base_url, options_dictionary)
 end
+
+function url(base::String, model::PolygonTechnicalIndicatorMACDEndpointModel; 
+    apiversion::Int = 1)::String
+
+    # get data from the API call data -
+    apikey = model.apikey
+    ticker = model.ticker
+    timespan = model.timespan
+    timestamp = model.timestamp
+    adjusted = model.adjusted
+    short_window = model.short_window
+    long_window = model.long_window
+    signal_window = model.signal_window
+    series_type = model.series_type
+    expand_underlying = model.expand_underlying
+    order = model.order
+    limit = model.limit
+
+    # build up the base string -
+    base_url = "$(base)/v$(apiversion)/indicators/macd/$(ticker)?"
+
+    # what keys are passed as parameters?
+    options_dictionary = Dict{String,Any}()
+    options_dictionary["apiKey"] = apikey
+    options_dictionary["timespan"] = timespan
+    options_dictionary["timestamp"] = timestamp
+    options_dictionary["adjusted"] = adjusted
+    options_dictionary["short_window"] = short_window
+    options_dictionary["long_window"] = long_window
+    options_dictionary["signal_window"] = signal_window
+    options_dictionary["series_type"] = series_type
+    options_dictionary["expand_underlying"] = expand_underlying
+    options_dictionary["order"] = order
+    options_dictionary["limit"] = limit
+ 
+    # return -
+    return _add_parameters_to_url_query_string(base_url, options_dictionary)
+end
 # -- URL FACTORY METHODS ABOVE HERE --------------------------------------------------- #
 
 # -- OPTIONS TICKER FACTORY METHODS BELOW HERE ---------------------------------------- #
