@@ -393,5 +393,20 @@ mutable struct PolygonTechnicalIndicatorMACDEndpointModel <: AbstractPolygonEndp
 end
 
 mutable struct PolygonTechnicalIndicatorRSIEndpointModel <: AbstractPolygonEndpointModel
+
+    # data -
+    ticker::String
+    apikey::String
+    timespan::String
+    timestamp::Union{Nothing, Date}
+    adjusted::Union{Nothing,Bool}
+    window::Union{Nothing,Int}
+    series_type::Union{Nothing,String}
+    expand_underlying::Union{Nothing,Bool}
+    order::Union{Nothing,String}
+    limit::Union{Nothing,Int}
+
+    # constructor -
+    PolygonTechnicalIndicatorRSIEndpointModel() = new()
 end
 # === TECHNICAL INDICATOR ENDPOINTS ABOVE HERE ======================================================= #
