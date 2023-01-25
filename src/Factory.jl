@@ -252,25 +252,6 @@ function url(base::String, model::PolygonAggregatesEndpointModel;
 end
 
 # Options specific endpoints -
-function url(base::String, model::PolygonOptionsSnapshotEndpointModel; 
-    apiversion::Int = 3)::String
-
-    # get data from the endpoint model -
-    underlying = model.underlying
-    ticker = model.ticker
-    apikey = model.apikey
-
-    # build up the base string -
-    base_url = "$(base)/v$(apiversion)/snapshot/options/$(underlying)/$(ticker)?"
-
-    # what keys are passed as parameters?
-    options_dictionary = Dict{String,Any}()
-	options_dictionary["apiKey"] = apikey
-
-    # return -
-    return _add_parameters_to_url_query_string(base_url, options_dictionary)
-end
-
 function url(base::String, model::PolygonOptionsLastTradeEndpointModel; 
     apiversion::Int = 2)::String
 
@@ -339,6 +320,56 @@ function url(base::String, model::PolygonOptionsTradesEndpointModel; apiversion:
     # return -
     return _add_parameters_to_url_query_string(base_url, options_dictionary)
 end
+
+function url(base::String, model::PolygonOptionsContractSnapshotEndpointModel; 
+    apiversion::Int = 3)::String
+
+    # get data from the API call data -
+    apikey = model.apikey
+    ticker = model.ticker
+    underlyingAsset = model.underlyingAsset
+ 
+    # build up the base string -
+    base_url = "$(base)/v$(apiversion)/snapshot/options/$(underlyingAsset)/$(ticker)?"
+
+    # what keys are passed as parameters?
+    options_dictionary = Dict{String,Any}()
+    options_dictionary["apiKey"] = apikey
+
+    # return -
+    return _add_parameters_to_url_query_string(base_url, options_dictionary)
+end
+
+function url(base::String, model::PolygonOptionsChainSnapshotEndpointModel; 
+    apiversion::Int = 3)::String
+
+    # get data from the API call data -
+    apikey = model.apikey
+    underlyingAsset = model.underlyingAsset
+    strike_price = model.strike_price
+    expiration_date = model.expiration_date
+    contract_type = model.contract_type
+    order = model.order
+    limit = model.limit
+    sort = model.sort
+
+    # build up the base string -
+    base_url = "$(base)/v$(apiversion)/snapshot/options/$(underlyingAsset)/?"
+
+    # what keys are passed as parameters?
+    options_dictionary = Dict{String,Any}()
+    options_dictionary["apiKey"] = apikey
+    options_dictionary["strike_price"] = strike_price
+    options_dictionary["expiration_date"] = expiration_date
+    options_dictionary["contract_type"] = contract_type
+    options_dictionary["order"] = order
+    options_dictionary["limit"] = limit
+    options_dictionary["sort"] = sort    
+
+    # return -
+    return _add_parameters_to_url_query_string(base_url, options_dictionary)
+end
+
 
 # Stock specific endpoints -
 function url(base::String, model::PolygonStockTradesEndpointModel; 

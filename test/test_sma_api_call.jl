@@ -10,9 +10,6 @@ options["apikey"] = "abc123" # do _not_ check in a real API key
 # build the user model -
 user_model = model(PQPolygonSDKUserModel, options)
 
-# build the user model -
-user_model = model(PQPolygonSDKUserModel, options)
-
 # endpoint data -
 # ticker::String
 # apikey::String

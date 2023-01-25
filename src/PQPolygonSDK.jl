@@ -42,10 +42,11 @@ export PolygonPutOptionContractModel
 export PolygonCallOptionContractModel
 
 # options endpoints -
-export PolygonOptionsSnapshotEndpointModel
 export PolygonOptionsLastTradeEndpointModel
 export PolygonOptionsQuotesEndpointModel
 export PolygonOptionsTradesEndpointModel
+export PolygonOptionsContractSnapshotEndpointModel
+export PolygonOptionsChainSnapshotEndpointModel
 
 # stocks endpoints -
 export PolygonStockTradesEndpointModel

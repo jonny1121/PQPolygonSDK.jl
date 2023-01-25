@@ -299,36 +299,6 @@ function _process_ticker_news_call_response(body::String)
     return (header_dictionary, df)
 end
 
-function _process_options_snapshot_call_response(body::String)
-
-    # convert to JSON -
-    request_body_dictionary = JSON.parse(body)
-
-    # NOTE: the API doesn't return a consistent set of error conditions,
-    # we can put nonsense into the ticker string and status is still ok?
-
-    # before we do anything - check: do we have an error?
-    status_flag = request_body_dictionary["status"]
-    if (status_flag == "ERROR")
-        return _polygon_error_handler(request_body_dictionary)
-    end
-
-    # build the header dictionary -
-    header_dictionary = Dict{String,Any}()
-    header_keys = [
-        "status", "request_id"
-    ]
-    for key ∈ header_keys
-        header_dictionary[key] = request_body_dictionary[key]
-    end
-
-    # build the results dictionary structure -
-    base_results_dictionary = request_body_dictionary["results"];
-
-    # return -
-    return (header_dictionary, base_results_dictionary)
-end
-
 function _process_options_last_trade_call_response(body::String)
 
     # convert to JSON -
@@ -1688,4 +1658,76 @@ function _process_ti_rsi_call_response(body::String)
     # ok, so we have *two* data frames and a header -
     return (header_dictionary, df_rsi, df_underlying);
 end
+
+function _process_snapshot_option_contract_response(body::String)
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+
+    # before we do anything - check: do we have an error? can be due to stick or date
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # check: do we have a next_url?
+    # if not, add an empty value
+    get!(request_body_dictionary, "next_url", "")    
+
+    # build the header dictionary -
+    header_dictionary = Dict{String,Any}()
+    header_keys = [
+        "status", "request_id", "next_url"
+    ]
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # check: if results is empty, then return Nothing in data -
+    results_dictionary = request_body_dictionary["results"]
+    if (isempty(results_dictionary) == true)
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # grab the results -
+    results_dictionary = request_body_dictionary["results"]
+
+    # return -
+    return (header_dictionary, results_dictionary);
+end
+
+function _process_options_chain_snapshot_call_response(body::String)
+
+    # convert to JSON -
+    request_body_dictionary = JSON.parse(body)
+
+    # before we do anything - check: do we have an error? can be due to stick or date
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # check: do we have a next_url?
+    # if not, add an empty value
+    get!(request_body_dictionary, "next_url", "")    
+
+    # build the header dictionary -
+    header_dictionary = Dict{String,Any}()
+    header_keys = [
+        "status", "request_id", "next_url"
+    ]
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # check: if results is empty, then return Nothing in data -
+    results_dictionary = request_body_dictionary["results"]
+    if (isempty(results_dictionary) == true)
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # return -
+    return (header_dictionary, results_dictionary)
+end
+
 # =================================================================================== #

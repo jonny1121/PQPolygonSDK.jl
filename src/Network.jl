@@ -36,11 +36,16 @@ function _process_polygon_response(model::Type{T},
     type_handler_dict[PolygonDailyOpenCloseEndpointModel] = _process_daily_open_close_call_response
     type_handler_dict[PolygonTickerNewsEndpointModel] = _process_ticker_news_call_response
     type_handler_dict[PolygonTickerDetailsEndpointModel] = _process_ticker_details_call_response
-    type_handler_dict[PolygonOptionsSnapshotEndpointModel] = _process_options_snapshot_call_response
+    type_handler_dict[PolygonStockTradesEndpointModel] = _process_stock_trades_call_response
+    
+    # options -
     type_handler_dict[PolygonOptionsLastTradeEndpointModel] = _process_options_last_trade_call_response
     type_handler_dict[PolygonOptionsQuotesEndpointModel] = _process_options_quotes_call_response
-    type_handler_dict[PolygonStockTradesEndpointModel] = _process_stock_trades_call_response
+    type_handler_dict[PolygonOptionsContractSnapshotEndpointModel] = _process_snapshot_option_contract_response
     type_handler_dict[PolygonOptionsTradesEndpointModel] = _process_options_trade_call_response
+    type_handler_dict[PolygonOptionsChainSnapshotEndpointModel] = _process_options_chain_snapshot_call_response 
+
+    # technical indicators -
     type_handler_dict[PolygonTechnicalIndicatorSMAEndpointModel] = _process_ti_sma_call_response 
     type_handler_dict[PolygonTechnicalIndicatorEMAEndpointModel] = _process_ti_ema_call_response 
     type_handler_dict[PolygonTechnicalIndicatorMACDEndpointModel] = _process_ti_macd_call_response
