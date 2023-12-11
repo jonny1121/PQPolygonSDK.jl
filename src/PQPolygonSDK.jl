@@ -57,5 +57,15 @@ export PolygonTechnicalIndicatorEMAEndpointModel
 export PolygonTechnicalIndicatorMACDEndpointModel
 export PolygonTechnicalIndicatorRSIEndpointModel
 
+# models from js2879
+export PolygonTickerEvents
+export PolygonTickerNews
+export PolygonStockLastTrade
+export PolygonStockLastQuote
+export PolygonStockSnapshotAllTickers
+export PolygonStockGainersLosers
+export PolygonStockTicker
+export PolygonStockUniversalSnapshot
+
 
 end # module

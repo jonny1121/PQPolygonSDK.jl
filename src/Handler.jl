@@ -1730,4 +1730,255 @@ function _process_options_chain_snapshot_call_response(body::String)
     return (header_dictionary, results_dictionary)
 end
 
+# add handlers for new endpoints here
+
+# js2879
+function _process_stock_last_trade(body::String)
+    
+    # convert to JSON
+    request_body_dictionary = JSON.parse(body)
+
+    # check if we have an error before moving on
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # build the header dictionary
+    header_dict = Dict{String,Any}()
+    header_key = [
+        "status", "request_id"
+    ]
+    for key ∈ header_key
+        header_dict[key] = request_body_dictionary[key]
+    end
+
+    # check if the results is empty
+    results_dict = request_body_dictionary["results"]
+    if (isempty(results_dict))
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # return -
+    return (header_dict, results_dict)
+end
+
+# js2879
+function _process_stock_last_quote(body::String)
+
+    # convert to JSON
+    request_body_dictionary = JSON.parse(body)
+
+    # check if we have an error before moving on
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # build the header dictionary
+    header_dict = Dict{String,Any}()
+    header_key = [
+        "status", "request_id"
+    ]
+    for key ∈ header_key
+        header_dict[key] = request_body_dictionary[key]
+    end
+
+    # check if the results is empty
+    results_dict = request_body_dictionary["results"]
+    if (isempty(results_dict))
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # return -
+    return (header_dict, results_dict)
+end
+
+# js2879
+function _process_snapshots_all_tickers(body::String)
+
+    # convert to JSON
+    request_body_dictionary = JSON.parse(body)
+
+    # check if we have an error before moving on
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # build the header dictionary
+    header_dict = Dict{String,Any}()
+    header_key = [
+        "count", "status"
+    ]
+    for key ∈ header_key
+        header_dict = request_body_dictionary[key]
+    end
+
+    # check if the tickers is empty
+    tickers_dict = request_body_dictionary["tickers"]
+    if (isempty(tickers_dict))
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # return -
+    return (header_dict, tickers_dict)
+end
+
+# js2879
+function _process_snapshots_gainers_losers(body::String)
+
+    # convert to JSON
+    request_body_dictionary = JSON.parse(body)
+
+    # check if we have an error before moving on
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # build the header dictionary
+    header_dict = Dict{String,Any}()
+    header_key = ["status"]
+    for key ∈ header_key
+        header_dict = request_body_dictionary[key]
+    end
+
+    # check if the tickers is empty
+    tickers_dict = request_body_dictionary["tickers"]
+    if (isempty(tickers_dict))
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # return -
+    return (header_dict, tickers_dict)
+end
+
+# js2879
+function _process_snapshots_ticker(body::String)
+
+    # convert to JSON
+    request_body_dictionary = JSON.parse(body)
+
+    # check if we have an error before moving on
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # build the header dictionary
+    header_dict = Dict{String,Any}()
+    header_key = [
+        "status", "request_id"
+        ]
+    for key ∈ header_key
+        header_dict = request_body_dictionary[key]
+    end
+
+    # check if the ticker is empty
+    tickers_dict = request_body_dictionary["ticker"]
+    if (isempty(tickers_dict))
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # return -
+    return(header_dict, tickers_dict)
+end
+
+# js2879
+function _process_snapshots_universal_snapshot(body::String)
+
+    # convert to JSON
+    request_body_dictionary = JSON.parse(body)
+
+    # check if we have an error before moving on
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # build the header dictionary
+    header_dict = Dict{String,Any}()
+    header_key = [
+        "status", "request_id"
+        ]
+    for key ∈ header_key
+        header_dict = request_body_dictionary[key]
+    end
+
+    # check if the results is empty
+    results_dict = request_body_dictionary["results"]
+    if (isempty(results_dict))
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # return -
+    return (header_dict, results_dict)
+end
+
+# js2879
+function _process_ticker_events(body::String)
+
+    # convert to JSON
+    request_body_dictionary = JSON.parse(body)
+
+    # check if we have an error before moving on
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # build the header dictionary
+    header_dict = Dict{String,Any}()
+    header_key = [
+        "status", "request_id"
+        ]
+    for key ∈ header_key
+        header_dict = request_body_dictionary[key]
+    end
+
+    # check if the results is empty
+    results_dict = request_body_dictionary["results"]
+    if (isempty(results_dict))
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # return -
+    return (header_dict, results_dict)
+end
+
+# js2879 
+function _process_ticker_news(body::String)
+
+    # convert to JSON
+    request_body_dictionary = JSON.parse(body)
+
+    # check if we have an error
+    status_flag = request_body_dictionary["status"]
+    if (status_flag == "ERROR")
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # if no value for next_url is present, add empty string
+    get!(request_body_dictionary, "next_url", "")    
+
+    # build header dictionary
+    header_dictionary = Dict{String,Any}()
+    header_keys = [
+        "count", "next_url", "request_id", "status"
+    ]
+    for key ∈ header_keys
+        header_dictionary[key] = request_body_dictionary[key]
+    end
+
+    # check if results is empty
+    results_dictionary = request_body_dictionary["results"]
+    if (isempty(results_dictionary) == true)
+        return _polygon_error_handler(request_body_dictionary)
+    end
+
+    # return -
+    return (header_dictionary, results_dictionary)
+end
+
 # =================================================================================== #

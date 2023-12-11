@@ -61,6 +61,17 @@ function _process_polygon_response(model::Type{T},
     type_handler_dict[PolygonConditionsEndpointModel] = _process_conditions_call_response #ycpan
     type_handler_dict[PolygonStockFinancialsEndpointModel] = _process_stock_financials_call_response #ycpan
     type_handler_dict[PolygonTickerTypesEndpointModel] = _process_ticker_types_call_response #ycpan
+
+    # handlers from js2879
+    type_handler[PolygonStockLastTrade] = _process_stock_last_trade
+    type_handler[PolygonStockLastQuote] = _process_stock_last_quote
+    type_handler[PolygonStockSnapshotAllTickers] = _process_snapshots_all_tickers
+    type_handler[PolygonStockGainersLosers] = _process_snapshots_gainers_losers
+    type_handler[PolygonStockTicker] = _process_snapshots_ticker
+    type_handler[PolygonStockUniversalSnapshot] = _process_snapshots_universal_snapshot
+    type_handler[PolygonTickerEvents] = _process_ticker_events
+    type_handler[PolygonTickerNews] = _process_ticker_news
+    
    
     # lookup the type -
     if (haskey(type_handler_dict, model) == true)

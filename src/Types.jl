@@ -245,6 +245,36 @@ mutable struct PolygonPutOptionContractModel <: AbstractPolygonOptionsContractMo
     PolygonPutOptionContractModel() = new()
 end
 
+# js2879
+# this is an experimental API
+mutable struct PolygonTickerEvents <: AbstractPolygonEndpointModel
+
+    # required
+    apikey::String
+    id::String 
+    types::Array{String,1}
+
+    # constructor
+    PolygonTickerEvents() = new()
+end
+
+# js2879
+mutable struct PolygonTickerNews <: AbstractPolygonEndpointModel
+
+    # required
+    apikey::String
+    ticker::String
+    published_utc::String
+    order::String 
+    limit::String
+    sort::String
+
+    # constructor
+    PolygonTickerNews() = new()
+end
+
+
+
 # === OPTIONS CONTRACT ENDPOINTS BELOW HERE ========================================================== #
 # options endpoints -
 mutable struct PolygonOptionsSnapshotEndpointModel <: AbstractPolygonEndpointModel
@@ -253,7 +283,7 @@ mutable struct PolygonOptionsSnapshotEndpointModel <: AbstractPolygonEndpointMod
     underlying::String
     ticker::String
     apikey::String
- 
+
     # constructor -
     PolygonOptionsSnapshotEndpointModel() = new()
 end
@@ -363,6 +393,80 @@ mutable struct PolygonStockTradesEndpointModel <: AbstractPolygonEndpointModel
     # constructor -
     PolygonStockTradesEndpointModel() = new()
 end
+
+# js2879
+mutable struct PolygonStockLastTrade <: AbstractPolygonEndpointModel
+
+    # required
+    apikey::String
+    ticker::String
+
+    # constructor
+    PolygonStockLastTrade() = new()
+end
+
+# js2879
+mutable struct PolygonStockLastQuote <: AbstractPolygonEndpointModel
+
+    # required
+    apikey::String
+    ticker::String
+
+    # constructor
+    PolygonStockLastQuote() = new()
+end
+
+# js2879
+mutable struct PolygonStockSnapshotAllTickers <: AbstractPolygonEndpointModel
+
+    # required
+    apikey::String
+    ticker::Array{String, 1}
+    include_otc::Bool = false # default is false
+
+    # constructor
+    PolygonStockSnapshotAllTickers() = new()
+end
+
+# js2879
+mutable struct PolygonStockGainersLosers <: AbstractPolygonEndpointModel
+
+    # required
+    apikey::String
+    direction::String # either "gainer" or "loser"
+    include_otc::Bool = false
+
+    # constructor
+    PolygonStockGainersLosers() = new()
+end
+
+# js2879
+mutable struct PolygonStockTicker <: AbstractPolygonEndpointModel
+
+    # required 
+    apikey::String
+    ticker::String
+
+    # constructor 
+    PolygonStockTicker() = new()
+end
+
+# js2879
+mutable struct PolygonStockUniversalSnapshot <: AbstractPolygonEndpointModel
+
+    # required
+    apikey::String
+    ticker_any_of::Array{String,1}
+    type::String
+    order::String
+    limit::String
+    sort::String
+    
+    #constructor
+    PolygonStockUniversalSnapshot() = new()
+end
+
+
 # === STOCK ENDPOINTS ABOVE HERE ===================================================================== #
 
 # === TECHNICAL INDICATOR ENDPOINTS BELOW HERE ======================================================= #
@@ -439,4 +543,6 @@ mutable struct PolygonTechnicalIndicatorRSIEndpointModel <: AbstractPolygonEndpo
     # constructor -
     PolygonTechnicalIndicatorRSIEndpointModel() = new()
 end
+
+
 # === TECHNICAL INDICATOR ENDPOINTS ABOVE HERE ======================================================= #
