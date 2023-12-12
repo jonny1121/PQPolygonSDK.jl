@@ -5,7 +5,7 @@ using DataFrames
 # build a user model -
 options = Dict{String,Any}()
 options["email"] = "js2879@cornell.edu"
-options["apikey"] = "abc1234" # do _not_ check in a real API key 
+options["apikey"] = "oBajrc4SgnVxnpNQz9FzAM85FH4pvuQB" # do _not_ check in a real API key 
 
 # build the user model -
 user_model = model(PQPolygonSDKUserModel, options)

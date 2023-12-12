@@ -266,7 +266,7 @@ mutable struct PolygonTickerNews <: AbstractPolygonEndpointModel
     ticker::String
     published_utc::String
     order::String 
-    limit::String
+    limit::Int64 = 10
     sort::String
 
     # constructor
@@ -459,7 +459,7 @@ mutable struct PolygonStockUniversalSnapshot <: AbstractPolygonEndpointModel
     ticker_any_of::Array{String,1}
     type::String
     order::String
-    limit::String
+    limit::Int64 = 10
     sort::String
     
     #constructor
